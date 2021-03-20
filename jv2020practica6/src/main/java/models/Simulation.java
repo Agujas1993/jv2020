@@ -15,7 +15,7 @@ public class Simulation {
 	private GridType gridType;
 	private StateSimulation state;
 
-	//Reglas simulaciÃ³n
+	//Reglas simulación
 	private int[] constantSurvive;
 	private int[] constantReborn;
 
@@ -136,7 +136,7 @@ public class Simulation {
 		this.loadDemoGrid();
 		int generation = 0; 
 		do {
-			System.out.println("\nGeneraciÃ³n: " + generation);
+			System.out.println("\nGeneración: " + generation);
 			this.showGrid();
 			this.updateGrid();
 			generation++;

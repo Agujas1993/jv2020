@@ -69,7 +69,7 @@ public class UserAccess {
 	}
 
 	public void welcome() {
-		System.out.println("SesiÃ³n: " + "Iniciada por: " 
+		System.out.println("Sesión: " + "Iniciada por: " 
 				+ 	this.session.getUser().getName() 
 				+ " "
 				+ this.session.getUser().getSurnames());	

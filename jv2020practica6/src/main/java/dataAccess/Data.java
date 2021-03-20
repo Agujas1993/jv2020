@@ -1,5 +1,7 @@
 package dataAccess;
 
+import java.util.ArrayList;
+
 import models.Mail;
 import models.Nif;
 import models.Password;
@@ -13,17 +15,17 @@ public class Data {
 
 	public final static int MAX_DATA = 10;
 
-	private User[] usersData;
-	private Session[] sessionsData;
-	private Simulation[] simulationsData;
+	private ArrayList<User> usersData;
+	private ArrayList<Session> sessionsData;
+	private ArrayList<Simulation> simulationsData;
 	private int registerdUser;
 	private int registerdSessions;
 	private int registerdSimulations;
 
 	public Data() {		
-		this.usersData = new User[MAX_DATA];
-		this.sessionsData = new Session[MAX_DATA];
-		this.simulationsData = new Simulation[MAX_DATA];
+		this.usersData = new ArrayList<User>();
+		this.sessionsData = new ArrayList<Session>();
+		this.simulationsData = new ArrayList<Simulation>();
 		this.registerdUser = 0;
 		this.registerdSessions = 0;
 		this.registerdSessions = 0;
@@ -34,7 +36,7 @@ public class Data {
 		this.createUser(new User(new Nif("00000000T"),
 				"Admin",
 				"Admin Admin",
-				"La Iglesia, 0, 30012, PatiÃ±o",
+				"La Iglesia, 0, 30012, Patiño",
 				new Mail("admin@gmail.com"),
 				new EasyDate(2000, 1, 14),
 				new EasyDate(2021, 1, 14),
@@ -44,7 +46,7 @@ public class Data {
 		this.createUser(new User(new Nif("00000001R"),
 				"Guest",
 				"Guest Guest",
-				"La Iglesia, 0, 30012, PatiÃ±o",
+				"La Iglesia, 0, 30012, Patiño",
 				new Mail("guest@gmail.com"),
 				new EasyDate(2000, 1, 14),
 				new EasyDate(2021, 1, 14),
@@ -56,17 +58,40 @@ public class Data {
 	// Users
 
 	public User findUser(String id) {
-		for (User user : this.usersData) {
-			if (user != null && user.getNif().getText().equals(id)) {
-				return user;
-			}
+		int pos = this.binaryfind(id);
+		if (pos >= 0) {
+			return this.usersData.get(pos);
 		}
 		return null;
 	}
+	private int binaryfind(String id) {
+		int inicio = 0;
+		int fin = usersData.size() - 1;
+		int pos;
+
+		while (inicio <= fin) {
+			pos = (inicio + fin) / 2;
+			if (usersData.get(pos).getId().equals(id)) {
+				return pos;
+			}
+			else { 
+				if (usersData.get(pos).getId().compareTo(id) < 0) {
+					inicio = pos + 1;
+				} 
+				else {
+					fin = pos - 1;
+				}
+			}
+		}
+		return -1;
+	}
+
+
+
 
 	public void createUser(User user) {
 		if (findUser(user.getNif().getText()) == null) {
-			this.usersData[this.registerdUser] = user;
+			this.usersData.add(user);
 			this.registerdUser++;
 			return;
 		}
@@ -75,7 +100,7 @@ public class Data {
 	public void updateUser(User user) {
 		User userOld = findUser(user.getNif().getText());
 		if (userOld != null) {
-			this.usersData[this.indexOfUser(userOld)] = user;
+			this.usersData.add(this.indexOfUser(userOld), user);
 			return;
 		}
 	}
@@ -84,15 +109,15 @@ public class Data {
 		User user = findUser(id);
 
 		if (user != null) {
-			this.usersData[this.indexOfUser(user)] = null;
+			this.usersData.remove(this.indexOfUser(user));
 			this.registerdUser--;
 			return;
 		}
 	}
 
 	private int indexOfUser(User user) {
-		for (int i=0; i < this.usersData.length; i++) {
-			if (user.equals(this.usersData[i])) {
+		for (int i=0; i < this.usersData.size(); i++) {
+			if (user.equals(this.usersData.get(i))) {
 				return i;
 			}
 		}
@@ -111,7 +136,7 @@ public class Data {
 	}
 
 	public void createSession(Session session) {
-		this.sessionsData[this.registerdSessions] = session;
+		this.sessionsData.add(session);
 		this.registerdSessions++;
 		return;
 	}
@@ -119,20 +144,20 @@ public class Data {
 	public void updateSession(Session session) {
 		Session sessionOld = this.findSession(session.getId());
 		if (sessionOld != null) {
-			this.sessionsData[this.indexOfSession(sessionOld)] = session;
+			this.sessionsData.add(this.indexOfSession(sessionOld), session);
 			return;
 		}
 	}
 
 	private int indexOfSession(Session session) {
-		for (int i=0; i < this.sessionsData.length; i++) {
-			if (session.equals(this.sessionsData[i])) {
+		for (int i=0; i < this.sessionsData.size(); i++) {
+			if (session.equals(this.sessionsData.get(i))) {
 				return i;
 			}
 		}
 		return -1;
 	}
-	
+
 	// Simulations
 
 	public Simulation findSimulation(String id) {
@@ -146,23 +171,23 @@ public class Data {
 
 	public void createSimulation(Simulation simulation) {
 		if (findUser(simulation.getId()) == null) {
-			this.simulationsData[this.registerdSimulations] = simulation;
+			this.simulationsData.add(simulation);
 			this.registerdSimulations++;
 			return;
 		}
 	}
-	
+
 	public void updateSimulation(Simulation simulation) {
 		Simulation simulationOld = this.findSimulation(simulation.getId());
 		if (simulationOld != null) {
-			this.simulationsData[this.indexOfSimulation(simulationOld)] = simulation;
+			this.simulationsData.add(this.indexOfSimulation(simulationOld), simulation);
 			return;
 		}
 	}
 
 	private int indexOfSimulation(Simulation simulation) {
-		for (int i=0; i < this.simulationsData.length; i++) {
-			if (simulation.equals(this.simulationsData[i])) {
+		for (int i=0; i < this.simulationsData.size(); i++) {
+			if (simulation.equals(this.simulationsData.get(i))) {
 				return i;
 			}
 		}
