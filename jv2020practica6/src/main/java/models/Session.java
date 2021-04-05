@@ -1,7 +1,7 @@
 package models;
 import utils.EasyDate;
 
-public class Session {
+public class Session implements Identificable {
 	
 	public enum StateSession {ACTIVE, CLOSED};
 	
@@ -32,6 +32,7 @@ public class Session {
 		this.state = session.state;
 	}
 	
+	@Override
 	public String getId() {
 		return this.user.getId() + "-" + this.startTime.toStringTimeStamp();
 	}

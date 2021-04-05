@@ -2,7 +2,7 @@ package models;
 
 import utils.EasyDate;
 
-public class User {
+public class User implements Identificable {
 
 	public enum RoleUser { GUEST, REGISTERED, ADMIN };
 
@@ -55,6 +55,7 @@ public class User {
 		this.role = RoleUser.REGISTERED;	
 	}
 
+	@Override
 	public String getId() {
 		return this.nif.getText();
 	}

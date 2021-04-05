@@ -4,7 +4,7 @@ import java.util.Arrays;
 
 import utils.EasyDate;
 
-public class Simulation {
+public class Simulation implements Identificable {
 
 	public enum StateSimulation {PREPARED, RUNNING, FINISHED};
 	public enum GridType {EDGES, CYCLIC, UNLIMITED};
@@ -63,6 +63,7 @@ public class Simulation {
 		return clon;
 	}
 
+	@Override
 	public String getId() { 
 		return this.user.getId() + ":" + this.date.toStringTimeStamp();
 	}
