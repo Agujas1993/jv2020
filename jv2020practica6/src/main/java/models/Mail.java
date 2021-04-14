@@ -7,7 +7,7 @@ public class Mail {
 	private String text;
 	
 	public Mail(String text) {
-		setTexto(text);
+		setText(text);
 	}
 
 	public Mail() {
@@ -18,11 +18,11 @@ public class Mail {
 		this.text = new String(mail.text);
 	}
 	
-	public String getTexto() {
+	public String getText() {
 		return this.text;
 	}
 
-	public void setTexto(String text) {
+	public void setText(String text) {
 		assert text != null;
 		if (isValidMail(text)) {
 			this.text = text;

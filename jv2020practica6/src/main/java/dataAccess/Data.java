@@ -1,6 +1,7 @@
 package dataAccess;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import models.Identificable;
 import models.Mail;
@@ -19,11 +20,13 @@ public class Data {
 	private ArrayList<Identificable> usersData;
 	private ArrayList<Identificable> sessionsData;
 	private ArrayList<Identificable> simulationsData;
-
+	private HashMap<String,String> idEquivalence;
+	
 	public Data() {		
 		this.usersData = new ArrayList<Identificable>();
 		this.sessionsData = new ArrayList<Identificable>();
 		this.simulationsData = new ArrayList<Identificable>();
+		this.idEquivalence = new HashMap<String,String>();
 		loadIntegratedUsers();
 
 	}
@@ -42,7 +45,7 @@ public class Data {
 		this.createUser(new User(new Nif("00000001R"),
 				"Guest",
 				"Guest Guest",
-				"La Iglesia, 0, 30012, Pati�o",
+				"La Iglesia, 0, 30012, Patiño",
 				new Mail("guest@gmail.com"),
 				new EasyDate(2000, 1, 14),
 				new EasyDate(2021, 1, 14),
@@ -76,7 +79,8 @@ public class Data {
 	// Users
 
 	public User findUser(String id) {
-		int pos = this.indexSort(this.usersData,id);
+		id = this.idEquivalence.get(id);
+		int pos = this.indexSort(this.usersData, id);
 		if (pos >= 0) {
 			return (User) this.usersData.get(pos);
 		}
@@ -85,19 +89,19 @@ public class Data {
 
 	public void createUser(User user) {
 		int index = this.indexSort(this.usersData, user.getId());
-
-		if (index < 0) {
-			System.out.println(index);
+		if(index < 0) {
 			this.usersData.add(-(index+1), user);
-		}
-	//ERROR
+			this.idEquivalence.put(user.getNif().getText(), user.getId());
+			this.idEquivalence.put(user.getMail().getText(), user.getId());
+			}
 	}
 
 	public void updateUser(User user) {
 		User userOld = findUser(user.getNif().getText());
 		if (userOld != null) {
 			this.usersData.set(this.indexSort(usersData, userOld.getId()), user);
-			return;
+			this.idEquivalence.replace(userOld.getNif().getText(), user.getId());
+			this.idEquivalence.replace(userOld.getMail().getText(), user.getId());
 		}
 	}
 
@@ -106,6 +110,8 @@ public class Data {
 
 		if (user != null) {
 			this.usersData.remove(this.indexSort(usersData, user.getId()));
+			this.idEquivalence.remove(user.getNif().getText());
+			this.idEquivalence.remove(user.getMail().getText());
 		}
 	}
 
