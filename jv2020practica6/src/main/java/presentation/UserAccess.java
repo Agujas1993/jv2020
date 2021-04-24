@@ -82,7 +82,8 @@ public class UserAccess {
 	// Simulation
 	
 	public void showDemo() {
-		this.simulation.runDemo();	
+		this.simulation.getWorld().runDemo();	
 	}
 	
 }
+
