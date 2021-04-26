@@ -1,12 +1,16 @@
 package models;
 
 import java.util.Arrays;
+import java.util.List;
 
-public class World {
+
+public class World implements Identificable {
 
 	public enum GridType {EDGES, CYCLIC, UNLIMITED};
 
+	private String name;
 	private byte[][] grid;
+	private List<Coordinate> distribution;
 	private GridType gridType;
 
 	private int[] constantSurvive;
@@ -15,25 +19,27 @@ public class World {
 	private static final int DEFAULT_GRID_SIZE = 18;
 	private static final int SIMULATION_CYCLES = 20;
 
-	public World(byte[][] grid) {
+	public World(String name, byte[][] grid) {
 
+		this.setName(name);
 		this.setGrid(grid);
 		this.grid = grid;
 		this.applyStandardLaws();
 		this.gridType = GridType.EDGES;
-
 	}
+
 	private void applyStandardLaws() {
 		this.constantSurvive = new int[] {2, 3};
 		this.constantReborn = new int[] {3};
 	}
+	
 	public World(World world) {
 		this.grid =	cloneGrid(world.grid);
 		this.constantSurvive = Arrays.copyOf(world.constantSurvive, world.constantSurvive.length);
 		this.constantReborn = Arrays.copyOf(world.constantReborn, world.constantReborn.length);
 		this.gridType = world.gridType;
 	}
-	
+
 	private byte[][] cloneGrid(byte[][] grid) {
 		byte[][] clon = new byte[grid.length][];
 		for (int i = 0; i < grid.length; i++) {
@@ -41,17 +47,30 @@ public class World {
 		}
 		return clon;
 	}
-	
+
 	public World() {
-		this(new byte[DEFAULT_GRID_SIZE][DEFAULT_GRID_SIZE]);
+		this("Demo",new byte[DEFAULT_GRID_SIZE][DEFAULT_GRID_SIZE]);
 	}
 
+	public String getName() {
+		return name;
+	}
+	
 	public byte[][] getGrid() {
 		return this.grid;
 	}
 
 	public GridType getGridType() {
 		return this.gridType;
+	}
+
+	public List<Coordinate> getDistribution() {
+		return distribution;
+	}
+
+	private void setName(String name) {
+		assert name != null;
+		this.name = name;
 	}
 	
 	public void setGrid(byte[][] grid) {
@@ -63,6 +82,16 @@ public class World {
 		assert gridType != null;
 		this.gridType = gridType;
 	}
+	
+	public void setDistribution(List<Coordinate> distribution) {
+		this.distribution = distribution;
+	}
+	
+	@Override
+	public String getId() {
+		return this.name;
+	}
+	
 	public void runDemo() {
 		this.loadDemoGrid();
 		int generation = 0; 
